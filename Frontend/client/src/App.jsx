@@ -13,7 +13,6 @@ export default function App() {
       <div className="max-w-6xl mx-auto px-6">
         <Services />
         <About />
-        {/* <ContactForm /> */}
         </div>
       <Footer />
     </div>
