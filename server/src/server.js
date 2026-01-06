@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const adminRoutes = require('./routes/admin.routes');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -13,9 +13,7 @@ const logger = require('./utils/logger');
 
 const app = express();
 
-/* ======================
-   GLOBAL MIDDLEWARES
-====================== */
+
 
 app.use(helmet());
 
@@ -26,14 +24,12 @@ app.use(
   })
 );
 
-// ||  'https://localhost:5173'
+
 
 app.use(express.json({ limit: '10kb' }));
 app.use(pinoHttp({ logger }));
 
-/* ======================
-   HEALTH CHECK
-====================== */
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -61,27 +57,9 @@ app.use('/api/leads', rateLimiter);
 
 app.use('/api/leads', leadsRoute);
 app.use('/api/auth', authRoute);
-
-/* ======================
-   ERROR HANDLER (LAST)
-====================== */
-
+app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
-
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL,
-//   credentials: true // only needed if you use cookies
-// }));
-
-
-
-
-/* ======================
-   SERVER BOOTSTRAP
-====================== */
-
 const PORT = process.env.PORT || 5000;
-
 (async () => {
   try {
     await connectDB(process.env.MONGO_URI);
