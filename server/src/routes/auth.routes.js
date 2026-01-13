@@ -139,6 +139,56 @@ router.get('/me', requireAuth, async (req, res, next) => {
   }
 });
 
+router.post('/createadmin', requireAuth, async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'email and password are required'
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        error: 'User already exists'
+      });
+    }
+
+    // ✅ create admin using model helper
+    const newAdmin = await User.createWithPassword(
+      normalizedEmail,
+      password,
+      'admin',
+      name || 'Admin'
+    );
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        id: newAdmin._id,
+        email: newAdmin.email,
+        role: newAdmin.role,
+        name: newAdmin.name
+      }
+    });
+  } catch (err) {
+    console.error('Create admin failed:', err);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+
+
+
 /**
  * POST /api/auth/logout
  * - clears auth cookie
@@ -155,3 +205,5 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+

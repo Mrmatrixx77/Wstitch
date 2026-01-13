@@ -4,11 +4,12 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-route
 import axios from 'axios';
 import Landing from './pages/LandingPage';
 import RequireAdmin from './components/RequireAdmin';
+import AdminModal from './components/Admin/AdminModal';
 
 /* -----------------------
    Helper: API base URL
    ----------------------- */
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 /* -----------------------
    Login Page (cookie auth)
@@ -105,66 +106,94 @@ function AdminLogin() {
   );
 }
 
-/* -----------------------
-   Admin Dashboard component (cookie-based)
-   ----------------------- */
 function AdminDashboardInner() {
-  const [leads, setLeads] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [leads, setLeads] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showAdminModal, setShowAdminModal] = useState(false)
+
+  const navigate = useNavigate()
 
   // logout should call server to clear cookie
   const logout = async () => {
     try {
-      await axios.post(`${API_BASE}/api/auth/logout`, {}, { withCredentials: true });
+      await axios.post(
+        `${API_BASE}/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      )
     } catch (err) {
-      console.warn('Logout request failed', err?.response?.data || err.message);
+      console.warn('Logout request failed', err?.response?.data || err.message)
     } finally {
-      navigate('/login', { replace: true });
+      navigate('/login', { replace: true })
     }
-  };
+  }
 
   useEffect(() => {
-    let mounted = true;
+    let mounted = true
 
     const fetchLeads = async () => {
-      setLoading(true);
+      setLoading(true)
       try {
         // use cookie auth (withCredentials)
-        const res = await axios.get(`${API_BASE}/api/admin/leads`, { withCredentials: true, timeout: 8000 });
-        if (!mounted) return;
-        setLeads(res.data?.data || []);
+        const res = await axios.get(
+          `${API_BASE}/api/admin/leads`,
+          { withCredentials: true, timeout: 8000 }
+        )
+        if (!mounted) return
+        setLeads(res.data?.data || [])
       } catch (err) {
-        console.error('Fetch leads error', err?.response || err.message);
-        // unauthorized or forbidden -> redirect to login
+        console.error('Fetch leads error', err?.response || err.message)
+
         if (err?.response?.status === 401 || err?.response?.status === 403) {
-          navigate('/login', { replace: true });
+          navigate('/login', { replace: true })
         }
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) setLoading(false)
       }
-    };
+    }
 
-    fetchLeads();
-
-    return () => { mounted = false; };
-  }, [navigate]);
+    fetchLeads()
+    return () => { mounted = false }
+  }, [navigate])
 
   return (
     <div className="min-h-screen bg-gray-50">
+
+      {/* Header */}
       <header className="bg-white shadow p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-md bg-brand-gold flex items-center justify-center text-white font-bold">W</div>
+          <div className="w-10 h-10 rounded-md bg-brand-gold flex items-center justify-center text-white font-bold">
+            W
+          </div>
           <div>
             <div className="font-semibold">Wstitch Admin</div>
             <div className="text-xs text-gray-500">Manage leads</div>
           </div>
         </div>
+
         <div className="flex items-center gap-4">
-          <button onClick={logout} className="text-sm text-red-600 hover:underline">Logout</button>
+          <button
+            onClick={() => setShowAdminModal(true)}
+            className="bg-brand-gold text-white px-4 py-2 rounded text-sm font-semibold hover:opacity-90"
+          >
+            + Add Admin
+          </button>
+
+          <button
+            onClick={logout}
+            className="text-sm text-red-600 hover:underline"
+          >
+            Logout
+          </button>
         </div>
       </header>
 
+      {/* Add Admin Modal */}
+      {showAdminModal && (
+        <AdminModal onClose={() => setShowAdminModal(false)} />
+      )}
+
+      {/* Main */}
       <main className="p-8">
         <h1 className="text-2xl font-bold mb-6">Leads</h1>
 
@@ -172,26 +201,37 @@ function AdminDashboardInner() {
           <div className="text-gray-600">Loading...</div>
         ) : (
           <div className="grid gap-4">
-            {leads.length === 0 && <div className="text-gray-600">No leads yet.</div>}
+            {leads.length === 0 && (
+              <div className="text-gray-600">No leads yet.</div>
+            )}
+
             {leads.map((l) => (
               <div key={l._id} className="border p-4 rounded bg-white">
                 <div className="flex justify-between items-start gap-4">
                   <div>
                     <div className="text-lg font-semibold">{l.name}</div>
-                    <div className="text-sm text-gray-600">{l.email} • {l.phone}</div>
+                    <div className="text-sm text-gray-600">
+                      {l.email} • {l.phone}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">{new Date(l.createdAt).toLocaleString()}</div>
+                  <div className="text-xs text-gray-500">
+                    {new Date(l.createdAt).toLocaleString()}
+                  </div>
                 </div>
-                {l.message && <p className="mt-3 text-gray-700 whitespace-pre-wrap">{l.message}</p>}
+
+                {l.message && (
+                  <p className="mt-3 text-gray-700 whitespace-pre-wrap">
+                    {l.message}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         )}
       </main>
     </div>
-  );
+  )
 }
-
 /* -----------------------
    App wrapper + Routes
    ----------------------- */
@@ -215,3 +255,9 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+
+
+
+
+
