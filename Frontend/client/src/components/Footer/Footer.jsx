@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 export default function Footer() {
     return (
         <footer aria-label="Site footer" className="bg-brand-gold text-white">
@@ -27,8 +29,8 @@ export default function Footer() {
 
 
 <div className="flex items-center gap-3">
-<a href="https://wa.me/" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-md text-sm">WhatsApp</a>
-<a href="mailto:hello@wstitch.com" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-md text-sm">Email</a>
+<a href="https://wa.me/message/NSTKYH2754HYJ1" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-md text-sm">WhatsApp</a>
+<a href="mailto:wstitch07@gmail.com" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-md text-sm">Email</a>
 </div>
 </div>
 
@@ -59,15 +61,15 @@ export default function Footer() {
 <h4 className="font-semibold">Get a quote</h4>
 <p className="text-sm opacity-90">Send project details — we reply within 24 hours.</p>
 <a href="#contact" className="bg-white text-amber-600 font-semibold px-5 py-2 rounded-md shadow-sm">Request Quote</a>
+{/* <Link to="#contact" className="bg-white text-amber-600 font-semibold px-5 py-2 rounded-md shadow-sm">Request Quote</Link> */}
 
-
-<form className="mt-4 w-full md:w-72" onSubmit={(e)=>e.preventDefault()}>
+{/* <form className="mt-4 w-full md:w-72" onSubmit={(e)=>e.preventDefault()}>
 <label htmlFor="newsletter" className="sr-only">Email</label>
 <div className="flex gap-2">
 <input id="newsletter" type="email" placeholder="Your email" className="w-full px-3 py-2 rounded-md text-amber-900" />
 <button className="bg-amber-800/20 hover:bg-amber-800/30 px-3 py-2 rounded-md text-sm">Join</button>
 </div>
-</form>
+</form> */}
 </div>
 </div>
 

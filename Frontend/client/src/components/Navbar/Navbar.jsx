@@ -7,11 +7,11 @@ export default function Navbar() {
             <div className="w-10 h-10 rounded-md bg-brand-gold flex items-center justify-center text-white font-bold">W</div>
             <span className="font-semibold text-lg text-brand-gold">Wstitch</span>
           </div>
-            <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
+            {/* <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
             <a href="#" className="hover:text-brand-dark">Products</a>
             <a href="#" className="hover:text-brand-dark">How it works</a>
             <a href="#" className="hover:text-brand-dark">Pricing</a>
-          </nav>
+          </nav> */}
 
           <div className="md:hidden">
               <button aria-label="Open menu">
