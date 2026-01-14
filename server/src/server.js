@@ -15,12 +15,12 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 
-
+app.set('trust proxy', 1);
 app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL,
     credentials: true, // required for cookies
     methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type','Authorization']
@@ -36,7 +36,7 @@ app.use(pinoHttp({ logger }));
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL ,
     credentials: true
   })
 );
@@ -63,7 +63,7 @@ app.use('/api/leads', leadsRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 (async () => {
   try {
     await connectDB(process.env.MONGO_URI);
