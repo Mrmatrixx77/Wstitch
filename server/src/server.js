@@ -33,14 +33,6 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(pinoHttp({ logger }));
 
-
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL ,
-    credentials: true
-  })
-);
-
 app.get('/health', (req, res) => {
   res.json({
     ok: true,
@@ -63,7 +55,17 @@ app.use('/api/leads', leadsRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
+
+console.log('BOOT CHECK', {
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  MONGO_URI_EXISTS: !!process.env.MONGO_URI,
+  FRONTEND_URL: process.env.FRONTEND_URL
+});
+
+
+
 (async () => {
   try {
     await connectDB(process.env.MONGO_URI);
