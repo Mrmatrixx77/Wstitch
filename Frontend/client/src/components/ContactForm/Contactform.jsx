@@ -23,6 +23,7 @@ const handleSubmit = async (e) => {
     // use axios POST
     await axios.post(`${api}/api/leads`, form, {
       headers: { 'Content-Type': 'application/json' },
+       withCredentials: true,
       timeout: 10000
     });
 

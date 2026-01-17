@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 /**
  * Async guard for admin routes.
@@ -40,6 +40,7 @@ export default function RequireAdmin({ children }) {
           try {
             const resp2 = await axios.get(`${API_BASE}/api/auth/me`, {
               headers: { Authorization: `Bearer ${legacy}` },
+               withCredentials: true,
               timeout: 8000
             });
             if (!mounted) return;
